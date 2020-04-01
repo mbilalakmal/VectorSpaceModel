@@ -68,6 +68,8 @@ def _build_vsm_index(documents, stop_words):
     vsm_matrix = np.multiply(vsm_matrix, idf_vector)
 
     # convert each row to unit vector
+    # |V| = (x^2 + y^2 + ...)^1/2
+    # unit V = V / |V|
     magnitudes = (vsm_matrix**2).sum(
             axis=1, keepdims=True
     ) ** (0.5)
