@@ -67,6 +67,15 @@ def _build_vsm_index(documents, stop_words):
     # multiply idf with tf
     vsm_matrix = np.multiply(vsm_matrix, idf_vector)
 
+    # convert each row to unit vector
+    magnitudes = (vsm_matrix**2).sum(
+            axis=1, keepdims=True
+    ) ** (0.5)
+
+    # divide vsm_vectors by magnitudes
+    vsm_matrix = vsm_matrix/magnitudes
+
+    # pack positions, matrix, and idf in a single object for storing
     vsm_index = {
         'term_positions': term_positions,
         'vsm_matrix': vsm_matrix,
@@ -103,4 +112,5 @@ if __name__ == '__main__':
     start = time.time()
     generate_index_file()
     stop = time.time()
+    print('VSM Index stored to disk.')
     print(f'Time: {stop-start}')
