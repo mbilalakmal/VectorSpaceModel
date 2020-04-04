@@ -64,7 +64,11 @@ def _build_vsm_index(documents, stop_words):
     # idf = log(N/df)
     idf_vector = np.log2(ndocs/document_frequencies)
 
-    # multiply idf with tf
+    # TF = log(tf+1)
+    vsm_matrix = vsm_matrix + 1
+    vsm_matrix = np.log2(vsm_matrix)
+
+    # multiply IDF with TF
     vsm_matrix = np.multiply(vsm_matrix, idf_vector)
 
     # convert each row to unit vector
