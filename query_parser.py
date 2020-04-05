@@ -1,4 +1,16 @@
-# convert query string to unit vector (tf-idf)
+# -----------------------------------------------------------
+# This module calculates and returns cosine similarity
+# between a user query and the indexed documents.
+#
+# The steps performed are summarized below:
+# (1) The query is converted to a unit vector (TF-IDF weighting).
+# (2) Load VSM matrix containing document vectors.
+# (3) Calculate cosine similarity of each document.
+# (4) Sort documents in order of similarity.
+#
+#
+# (C) 2020 Muhammad Bilal Akmal, 17K-3669
+# -----------------------------------------------------------
 
 import heapq
 
@@ -53,7 +65,7 @@ def calculate_cosine_sim(query_vector):
     '''
     Calculate and return cosine similarity of a `query_vector`.
 
-    Returns a list of tuples in descending order of similarity.
+    Returns a maxheap of tuples in descending order of similarity.
     '''
     vsm_index = filing.load_python_object(r'objects/vsm_index')
     vsm_matrix = vsm_index['vsm_matrix']
@@ -71,6 +83,9 @@ def calculate_cosine_sim(query_vector):
 
 
 def resolve_vsm_query(query: str):
+    '''
+    Returns a maxheap of tuples in descending order of similarity.
+    '''
     # convert to vector
     query_vector = parse_query(query)
 
