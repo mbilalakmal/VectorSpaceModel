@@ -38,14 +38,22 @@ def parse_query(query: str):
     nterms = len(term_positions)
     query_vector = np.zeros(shape=(nterms,), dtype=float)
 
+    # if query magnitude == 0 | query contains no features
+    contains_no_features = True
+
     for term in query_terms:
         # ignore terms that are not features of any doc
         if term not in term_positions.keys():
             continue
 
+        contains_no_features = False
+
         # get position/dimension of feature
         position = term_positions[term]
         query_vector[position] += 1
+
+    if contains_no_features:
+        return query_vector # return as it is
 
     # TF = log(tf+1)
     query_vector += 1
@@ -56,6 +64,7 @@ def parse_query(query: str):
 
     # convert to unit vector
     magnitude = (query_vector**2).sum(keepdims=True) ** (0.5)
+
     query_vector = query_vector / magnitude
 
     return query_vector
