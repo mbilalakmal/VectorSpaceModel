@@ -95,7 +95,8 @@ def resolve_vsm_query(query: str, alpha: float=0.0005):
     max_heap = calculate_cosine_sim(query_vector)
 
     results = []
-    for i in range(len(max_heap)):
+
+    while max_heap:
         result = heapq.heappop(max_heap)
         sim, doc_id = result
         doc_id = str(doc_id)
