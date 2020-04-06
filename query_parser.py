@@ -65,7 +65,7 @@ def calculate_cosine_sim(query_vector):
     '''
     Calculate and return cosine similarity of a `query_vector`.
 
-    Returns a maxheap of tuples in descending order of similarity.
+    Returns a maxheap of tuples in order of similarity.
     '''
     vsm_index = filing.load_python_object(r'objects/vsm_index')
     vsm_matrix = vsm_index['vsm_matrix']
@@ -82,9 +82,11 @@ def calculate_cosine_sim(query_vector):
     return max_heap
 
 
-def resolve_vsm_query(query: str):
+def resolve_vsm_query(query: str, alpha: float=0.0005):
     '''
-    Returns a maxheap of tuples in descending order of similarity.
+    Returns a list of tuples in descending order of similarity.
+
+    Doc_ids are converted to string for displaying.
     '''
     # convert to vector
     query_vector = parse_query(query)
@@ -92,22 +94,23 @@ def resolve_vsm_query(query: str):
     # calculate sim
     max_heap = calculate_cosine_sim(query_vector)
 
-    return max_heap
+    results = []
+    for i in range(len(max_heap)):
+        result = heapq.heappop(max_heap)
+        sim, doc_id = result
+        doc_id = str(doc_id)
+        sim *= -1
+        if sim < alpha:
+            break
+        results.append(doc_id)
+
+    return results
 
 
 if __name__ == '__main__':
     query = input('Enter query: ')
-    max_heap = resolve_vsm_query(query)
-    size = len(max_heap)
-    count = 0
+    results = resolve_vsm_query(query)
+    size = len(results)
     
-    for i in range(size):
-        result = heapq.heappop(max_heap)
-        sim, doc_id = result
-        sim *= -1
-        if sim < 0.0005:
-            break
-        count += 1
-        print(f'Doc: {doc_id} | Sim: {sim}')
-
-    print(f'Length: {count}')
+    print(f'Relevant speeches: {results}')
+    print(f'Number of relevant documents: {size}')
