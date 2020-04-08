@@ -1,4 +1,8 @@
+# ignore binary files
+*
+# ignore vscode config folder
 .vscode
+# ignore virtual environment folder
 venv
+# ignore cached pyc folder
 __pycache__
-objects
