@@ -14,11 +14,11 @@
 # (C) 2020 Muhammad Bilal Akmal, 17K-3669
 # -----------------------------------------------------------
 
-import PySimpleGUI as sg
 import numpy as np
+import PySimpleGUI as sg
 
-from vsm_indexer import generate_index_file
 from query_parser import resolve_vsm_query
+from vsm_indexer import generate_index_file
 
 sg.theme('DarkAmber')
 
@@ -28,7 +28,7 @@ layout = [  [sg.Text('')],
             [sg.Input(key='_QUERY_'), sg.Button('SEARCH', bind_return_key=True)],
             [sg.Text('')],
             [
-                sg.Text('Aplha'),
+                sg.Text('Alpha'),
                 sg.Spin(
                     [i for i in np.linspace(0.0001,0.1000, 1000)],
                     initial_value=0.0005,
@@ -37,10 +37,12 @@ layout = [  [sg.Text('')],
                     )   # spinner for alpha value
             ],
             [sg.Text('')],
-            [sg.Text(size=(48,6), key='_DOCS_')],
+            [sg.Text(size=(48,4), key='_DOCS_')],
             [sg.Text('')],
             [sg.Text(size=(4, 1), key='_SIZE_')],
             [sg.Button('Build Index')],
+            [sg.Text('')],
+            [sg.Text('TF  =  log( tf + 1 )  |  IDF  =  log( N / df )')],
             [sg.Text('')]
         ]
 
@@ -57,7 +59,7 @@ while True:
     if event is None:
         break
 
-    if event == 'SEARCH':
+    elif event == 'SEARCH':
 
         query = values['_QUERY_']
         alpha = values['_ALPHA_']
@@ -67,14 +69,12 @@ while True:
 
         result = resolve_vsm_query(query, alpha)
         display = ', '.join(result)
-        size = len(result)
 
         print(f'Relevant speeches: {display}')
-        print(f'Number of relevant documents: {size}')
-        print()
+        print(f'Number of relevant documents: {len(result)}\n')
 
         window['_DOCS_'].update(display)
-        window['_SIZE_'].update(size)
+        window['_SIZE_'].update(len(result))
         
     elif event == 'Build Index':
         generate_index_file()
