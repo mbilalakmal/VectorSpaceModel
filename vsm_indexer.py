@@ -33,10 +33,8 @@ def _build_vsm_index(documents, stop_words):
     `stop_words` are not considered as features.
     '''
     ndocs = len(documents)
-
     # each row is a doc | each column is a term (feature)
     vsm_matrix = np.zeros(shape=(ndocs, 0), dtype=float)
-
     # maps terms to their positions in the vsm_matrix
     term_positions = {}
 
@@ -96,7 +94,7 @@ def generate_index_file():
     doc_ids, documents = filing.read_docs_files(pathname)
 
     # Store doc_ids->filename dictionary
-    filename = r'objects\doc_ids'
+    filename = r'resources\doc_ids'
     filing.store_python_object(doc_ids, filename)
 
     # Read the stop words
@@ -107,7 +105,7 @@ def generate_index_file():
     vsm_index = _build_vsm_index(documents, stop_words)
 
     # Store the inverted index
-    filename = r'objects\vsm_index'
+    filename = r'resources\vsm_index'
     filing.store_python_object(vsm_index, filename)
 
 
