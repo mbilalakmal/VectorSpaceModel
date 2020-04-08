@@ -27,7 +27,7 @@ def parse_query(query: str):
 
     TF-IDF = log(tf+1) * log(N/df)
     '''
-    vsm_index = filing.load_python_object(r'objects/vsm_index')
+    vsm_index = filing.load_python_object(r'resources\vsm_index')
 
     term_positions = vsm_index['term_positions']
     idf_vector = vsm_index['idf_vector']
@@ -76,7 +76,7 @@ def calculate_cosine_sim(query_vector):
 
     Returns a maxheap of tuples in order of similarity.
     '''
-    vsm_index = filing.load_python_object(r'objects/vsm_index')
+    vsm_index = filing.load_python_object(r'resources\vsm_index')
     vsm_matrix = vsm_index['vsm_matrix']
 
     max_heap = [] # store (-sim, doc_id) tuples
