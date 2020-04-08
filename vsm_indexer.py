@@ -62,23 +62,20 @@ def _build_vsm_index(documents, stop_words):
     # document frequency for each term (column of vsm matrix)
     document_frequencies = np.count_nonzero(vsm_matrix, axis=0)
     # idf = log(N/df)
-    idf_vector = np.log2(ndocs/document_frequencies)
+    idf_vector = np.log(ndocs/document_frequencies)
 
     # TF = log(tf+1)
     vsm_matrix = vsm_matrix + 1
-    vsm_matrix = np.log2(vsm_matrix)
+    vsm_matrix = np.log(vsm_matrix)
 
     # multiply IDF with TF
     vsm_matrix = np.multiply(vsm_matrix, idf_vector)
 
     # convert each row to unit vector
     # |V| = (x^2 + y^2 + ...)^1/2
-    # unit V = V / |V|
     magnitudes = (vsm_matrix**2).sum(
             axis=1, keepdims=True
     ) ** (0.5)
-
-    # divide vsm_vectors by magnitudes
     vsm_matrix = vsm_matrix/magnitudes
 
     # pack positions, matrix, and idf in a single object for storing
