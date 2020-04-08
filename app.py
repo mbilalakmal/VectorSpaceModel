@@ -15,6 +15,7 @@
 # -----------------------------------------------------------
 
 import PySimpleGUI as sg
+import numpy as np
 
 from vsm_indexer import generate_index_file
 from query_parser import resolve_vsm_query
@@ -24,7 +25,17 @@ sg.theme('DarkAmber')
 layout = [  [sg.Text('')],
             [sg.Image(r'resources\icon.png'), sg.Text('Vector Space Model', font=('Helvetica', 16))],
             [sg.Text('A Search Engine For Trump\'s Speeches.', font=('Helvetica', 9))],
-            [sg.Input(key='_QUERY_'), sg.Button('SEARCH')],
+            [sg.Input(key='_QUERY_'), sg.Button('SEARCH', bind_return_key=True)],
+            [sg.Text('')],
+            [
+                sg.Text('Aplha'),
+                sg.Spin(
+                    [i for i in np.linspace(0.0001,0.1000, 1000)],
+                    initial_value=0.0005,
+                    size=(10,1),
+                    key='_ALPHA_'
+                    )   # spinner for alpha value
+            ],
             [sg.Text('')],
             [sg.Text(size=(48,6), key='_DOCS_')],
             [sg.Text('')],
@@ -49,16 +60,19 @@ while True:
     if event == 'SEARCH':
 
         query = values['_QUERY_']
+        alpha = values['_ALPHA_']
 
         if not query:
             continue
 
-        result = resolve_vsm_query(query)
+        result = resolve_vsm_query(query, alpha)
         display = ', '.join(result)
         size = len(result)
 
         print(f'Relevant speeches: {display}')
         print(f'Number of relevant documents: {size}')
+        print()
+
         window['_DOCS_'].update(display)
         window['_SIZE_'].update(size)
         
